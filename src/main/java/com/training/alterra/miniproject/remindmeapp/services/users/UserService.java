@@ -28,6 +28,8 @@ public class UserService implements IUserService{
     public void deleteUser(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+
+        userRepository.deleteById(userId);
     }
 
     @Override
