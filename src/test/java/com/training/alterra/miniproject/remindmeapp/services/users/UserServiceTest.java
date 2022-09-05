@@ -5,9 +5,9 @@ import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
 import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
+import com.training.alterra.miniproject.remindmeapp.services.users.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -20,7 +20,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -59,25 +58,6 @@ public class UserServiceTest {
 
         assertThat(userCreated.getEmail())
                 .isSameAs(user.getEmail());
-
-        //User user = new User();
-        //user.setFullName("nandang super papa");
-        //user.setEmail("net.nandang@gmail.com");
-        //user.setPassword("password");
-
-        //when(userRepository.save(ArgumentMatchers.any(User.class)))
-        //        .thenReturn(user);
-
-        //User userCreated = userService.createNewUser(user);
-
-        //assertThat(userCreated.getFullName())
-        //        .isSameAs(user.getFullName());
-
-        //assertThat(userCreated.getEmail())
-        //        .isSameAs(user.getEmail());
-
-        //verify(userRepository).save(user);
-
     }
 
     @Test

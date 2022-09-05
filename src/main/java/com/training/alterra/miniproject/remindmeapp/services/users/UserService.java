@@ -21,10 +21,6 @@ public class UserService implements IUserService{
     @Autowired
     ModelMapper modelMapper;
 
-    //@Override
-    //public User createNewUser(User user) {
-    //    return userRepository.save(user);
-    //}
     @Override
     public UserResponseDTO createNewUser(UserRequestDTO requestDTO) {
         User user = convertToEntity(requestDTO);
