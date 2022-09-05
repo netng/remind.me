@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -61,5 +62,20 @@ public class UserServiceTest {
 
         assertEquals(expected, users);
         verify(userRepository).findAll();
+    }
+
+    @Test
+    public void deleteUser_ifGivenIdFound() {
+        User user = new User();
+        user.setFullName("nandang");
+        user.setPassword("password");
+        user.setEmail("net.nandang@gmail.com");
+        user.setId(1L);
+
+        when(userRepository.findById(user.getId()))
+                .thenReturn(Optional.of(user));
+
+        userService.deleteUser(user.getId());
+        verify(userRepository).deleteById(user.getId());
     }
 }
