@@ -10,6 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,9 +44,13 @@ public class UserServiceTest {
         assertThat(userCreated.getEmail())
                 .isSameAs(user.getEmail());
 
+        verify(userRepository).save(user);
+
     }
 
+    @Test
     public void index_shouldReturnListOfUsers() {
-
+        List<User> users = new ArrayList<>();
+        users.add(new User());
     }
 }
