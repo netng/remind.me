@@ -26,13 +26,8 @@ public class UserService implements IUserService{
 
     @Override
     public void deleteUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundException(userId);
-        } else {
-            userRepository.deleteById(userId);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Override
