@@ -46,4 +46,11 @@ public class UserService implements IUserService{
             return userRepository.save(user);
         }
     }
+
+    @Override
+    public User showUserDetail(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
 }
