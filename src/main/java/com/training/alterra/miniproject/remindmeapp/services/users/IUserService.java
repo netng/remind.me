@@ -10,4 +10,6 @@ public interface IUserService {
     List<User> listAllUsers();
 
     void deleteUser(Long userId);
+
+    User updateUser(Long userId, User user);
 }
