@@ -8,4 +8,6 @@ public interface IUserService {
     User createNewUser(User user);
 
     List<User> listAllUsers();
+
+    void deleteUser(Long userId);
 }

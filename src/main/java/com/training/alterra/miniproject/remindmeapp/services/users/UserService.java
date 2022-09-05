@@ -1,11 +1,13 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
 import com.training.alterra.miniproject.remindmeapp.entities.User;
+import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService{
@@ -20,5 +22,16 @@ public class UserService implements IUserService{
     @Override
     public List<User> listAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundException(userId);
+        } else {
+            userRepository.deleteById(userId);
+        }
     }
 }
