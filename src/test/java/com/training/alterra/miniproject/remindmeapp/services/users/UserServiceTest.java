@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,5 +79,19 @@ public class UserServiceTest {
 
         userService.deleteUser(user.getId());
         verify(userRepository).deleteById(user.getId());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowException_whenUserNotFound() {
+        User user = new User();
+        user.setId(69L);
+        user.setFullName("nandang super papa");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
+
+        given(userRepository.findById(anyLong()))
+                .willReturn(Optional.ofNullable(null));
+
+        userService.deleteUser(user.getId());
     }
 }
