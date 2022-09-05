@@ -29,7 +29,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void create_shouldReturnNewCreatedUser() {
+    public void createNewUser_shouldReturnNewCreatedUser() {
         User user = new User();
         user.setFullName("nandang super papa");
         user.setEmail("net.nandang@gmail.com");
@@ -51,7 +51,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void index_shouldReturnListOfUsers() {
+    public void listAllUsers_shouldReturnListOfUsers() {
         List<User> users = new ArrayList<>();
         users.add(new User());
 
