@@ -8,7 +8,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 import static org.mockito.Mockito.when;
@@ -24,7 +23,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void whenSaveUser_shouldReturnUser() {
+    public void create_shouldReturnNewCreatedUser() {
         User user = new User();
         user.setFullName("nandang super papa");
         user.setEmail("net.nandang@gmail.com");
@@ -40,6 +39,10 @@ public class UserServiceTest {
 
         assertThat(userCreated.getEmail())
                 .isSameAs(user.getEmail());
+
+    }
+
+    public void index_shouldReturnListOfUsers() {
 
     }
 }
