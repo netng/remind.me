@@ -13,9 +13,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -52,5 +54,12 @@ public class UserServiceTest {
     public void index_shouldReturnListOfUsers() {
         List<User> users = new ArrayList<>();
         users.add(new User());
+
+        given(userRepository.findAll()).willReturn(users);
+
+        List<User> expected = userService.listAllUsers();
+
+        assertEquals(expected, users);
+        verify(userRepository).findAll();
     }
 }
