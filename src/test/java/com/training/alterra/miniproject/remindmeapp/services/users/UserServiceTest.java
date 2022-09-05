@@ -82,7 +82,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void shouldThrowException_whenUserNotFound() {
+    public void shouldThrowException_whenUserNotFound_onDeleteUser() {
         User user = new User();
         user.setId(69L);
         user.setFullName("nandang super papa");
@@ -93,5 +93,38 @@ public class UserServiceTest {
                 .willReturn(Optional.ofNullable(null));
 
         userService.deleteUser(user.getId());
+    }
+
+    @Test
+    public void updateUser_whenGivenIdFound() {
+        User user = new User();
+        user.setId(99L);
+        user.setFullName("nandang super papa");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
+
+        User newUser = new User();
+        user.setFullName("nandang papa engineer");
+
+        given(userRepository.findById(user.getId()))
+                .willReturn(Optional.of(user));
+        userService.updateUser(user.getId(), newUser);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowException_whenUserNotFound_onUpdateUser() {
+        User user = new User();
+        user.setId(26L);
+        user.setFullName("nandang");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
+
+        User newUser = new User();
+        newUser.setFullName("nandang papa");
+
+        given(userRepository.findById(anyLong()))
+                .willReturn(Optional.ofNullable(null));
+
+        userService.updateUser(user.getId(), newUser);
     }
 }
