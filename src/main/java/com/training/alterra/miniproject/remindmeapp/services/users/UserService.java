@@ -34,14 +34,11 @@ public class UserService implements IUserService{
 
     @Override
     public User updateUser(Long userId, User user) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundException(userId);
-        } else {
-            userRepository.findById(userId);
-            return userRepository.save(user);
-        }
+        user.setId(userId);
+        return userRepository.save(user);
     }
 
     @Override
