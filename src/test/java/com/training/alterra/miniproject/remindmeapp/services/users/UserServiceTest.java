@@ -1,5 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
+import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
 import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
@@ -9,6 +11,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 
 
 import java.util.ArrayList;
@@ -18,10 +21,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -32,17 +34,25 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    ModelMapper modelMapper = spy(new ModelMapper());
+
     @Test
     public void createNewUser_shouldReturnNewCreatedUser() {
-        User user = new User();
-        user.setFullName("nandang super papa");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
+        UserRequestDTO requestDTO = new UserRequestDTO();
+        requestDTO.setFullName("nandang");
+        requestDTO.setEmail("net.nandang@gmail.com");
+        requestDTO.setPassword("password");
 
-        when(userRepository.save(ArgumentMatchers.any(User.class)))
+        User user = modelMapper.map(requestDTO, User.class);
+        user.setId(1L);
+
+        when(userRepository.save(any(User.class)))
                 .thenReturn(user);
 
-        User userCreated = userService.createNewUser(user);
+        UserResponseDTO userCreated = userService.createNewUser(requestDTO);
+
+        assertThat(userCreated.getId())
+                .isNotNull();
 
         assertThat(userCreated.getFullName())
                 .isSameAs(user.getFullName());
@@ -50,7 +60,23 @@ public class UserServiceTest {
         assertThat(userCreated.getEmail())
                 .isSameAs(user.getEmail());
 
-        verify(userRepository).save(user);
+        //User user = new User();
+        //user.setFullName("nandang super papa");
+        //user.setEmail("net.nandang@gmail.com");
+        //user.setPassword("password");
+
+        //when(userRepository.save(ArgumentMatchers.any(User.class)))
+        //        .thenReturn(user);
+
+        //User userCreated = userService.createNewUser(user);
+
+        //assertThat(userCreated.getFullName())
+        //        .isSameAs(user.getFullName());
+
+        //assertThat(userCreated.getEmail())
+        //        .isSameAs(user.getEmail());
+
+        //verify(userRepository).save(user);
 
     }
 
