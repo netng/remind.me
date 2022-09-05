@@ -1,6 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
 import com.training.alterra.miniproject.remindmeapp.entities.User;
+import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,5 +127,35 @@ public class UserServiceTest {
                 .willReturn(Optional.ofNullable(null));
 
         userService.updateUser(user.getId(), newUser);
+    }
+
+    @Test
+    public void showUserDetail_whenUserFound() {
+        User user = new User();
+        user.setId(69L);
+        user.setFullName("nandang");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
+
+        when(userRepository.findById(user.getId()))
+                .thenReturn(Optional.of(user));
+
+        User expected = userService.showUserDetail(user.getId());
+
+        assertThat(expected).isSameAs(user);
+        verify(userRepository).findById(user.getId());
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void shouldThrowException_whenUserNotFound_onShowUserDetail() {
+        User user = new User();
+        user.setId(69L);
+        user.setFullName("nandang");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
+
+        given(userRepository.findById(anyLong()))
+                .willReturn(Optional.ofNullable(null));
+        userService.showUserDetail(user.getId());
     }
 }
