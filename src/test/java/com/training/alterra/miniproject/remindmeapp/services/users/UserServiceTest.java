@@ -7,9 +7,11 @@ import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundExcep
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import com.training.alterra.miniproject.remindmeapp.services.users.UserService;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
@@ -32,10 +34,14 @@ public class UserServiceTest {
     UserRepository userRepository;
 
     @InjectMocks
-    private UserService userService;
+    UserService userService = spy(new UserService());
 
     ModelMapper modelMapper = spy(new ModelMapper());
 
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
     @Test
     public void createNewUser_shouldReturnNewCreatedUser() {
         UserRequestDTO requestDTO = new UserRequestDTO();
@@ -110,35 +116,36 @@ public class UserServiceTest {
 
     @Test
     public void updateUser_whenGivenIdFound() {
-        User user = new User();
-        user.setId(99L);
-        user.setFullName("nandang super papa");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
+        UserRequestDTO userDTO = new UserRequestDTO();
+        userDTO.setFullName("nandang super papa");
+        userDTO.setEmail("net.nandang@gmail.com");
+        userDTO.setPassword("password");
 
-        User newUser = new User();
-        user.setFullName("nandang papa engineer");
+        User user = modelMapper.map(userDTO, User.class);
+        user.setId(1L);
+
+        UserRequestDTO newUserDTO = new UserRequestDTO();
+        newUserDTO.setFullName("nandang ganteng");
 
         given(userRepository.findById(user.getId()))
                 .willReturn(Optional.of(user));
-        userService.updateUser(user.getId(), newUser);
+
+        userService.updateUser(user.getId(), newUserDTO);
+
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowException_whenUserNotFound_onUpdateUser() {
-        User user = new User();
-        user.setId(26L);
-        user.setFullName("nandang");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
+        User user = modelMapper.map(newUserDTO(), User.class);
+        user.setId(1L);
 
-        User newUser = new User();
-        newUser.setFullName("nandang papa");
+        UserRequestDTO newUserDTO = new UserRequestDTO();
+        newUserDTO.setFullName("nandang papa");
 
         given(userRepository.findById(anyLong()))
                 .willReturn(Optional.ofNullable(null));
 
-        userService.updateUser(user.getId(), newUser);
+        userService.updateUser(user.getId(), newUserDTO);
     }
 
     @Test
@@ -169,5 +176,14 @@ public class UserServiceTest {
         given(userRepository.findById(anyLong()))
                 .willReturn(Optional.ofNullable(null));
         userService.showUserDetail(user.getId());
+    }
+
+    private UserRequestDTO newUserDTO() {
+        UserRequestDTO userDTO = new UserRequestDTO();
+        userDTO.setFullName("nandang super papa");
+        userDTO.setEmail("net.nandang@gmail.com");
+        userDTO.setPassword("password");
+
+        return userDTO;
     }
 }
