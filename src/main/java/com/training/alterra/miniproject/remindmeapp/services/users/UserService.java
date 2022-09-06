@@ -64,9 +64,11 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User showUserDetail(Long userId) {
-        return userRepository.findById(userId)
+    public UserResponseDTO showUserDetail(Long userId) {
+        userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+        Optional<User> user = userRepository.findById(userId);
+        return convertToDto(Optional.of(user).get().get());
     }
 
     private User convertToEntity(UserRequestDTO requestDTO) {
