@@ -31,4 +31,16 @@ public class UsersController {
         List<UserResponseDTO> users = userService.listAllUsers();
         return ResponseEntity.ok().body(users);
     }
+
+    @DeleteMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+    }
+
+    @PutMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long userId, @RequestBody UserRequestDTO requestDTO) {
+        return ResponseEntity.ok().body(userService.updateUser(userId, requestDTO));
+    }
 }
