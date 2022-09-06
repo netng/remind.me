@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -65,11 +66,16 @@ public class UserServiceTest {
         List<User> users = new ArrayList<>();
         users.add(new User());
 
-        given(userRepository.findAll()).willReturn(users);
+        given(userRepository.findAll())
+                .willReturn(users);
 
-        List<User> expected = userService.listAllUsers();
+        List<UserResponseDTO> responseDto = users.stream()
+                .map(user -> modelMapper.map(user, UserResponseDTO.class))
+                .collect(Collectors.toList());
 
-        assertEquals(expected, users);
+        List<UserResponseDTO> expected = userService.listAllUsers();
+
+        assertEquals(expected, responseDto);
         verify(userRepository).findAll();
     }
 
