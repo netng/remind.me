@@ -3,11 +3,12 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
 
 # API Documentations
 ### Users
-- List Users
+- <strong>List Users</strong>
 
 ```
 $ curl --location --request GET "localhost:8080/api/v1/users"`
-
+```
+```
 $ response:
 
 [
@@ -23,7 +24,7 @@ $ response:
     }
 ]
 ```
-- Crate New User
+- <strong>Crate New User</strong>
 ```
 $ curl --location --request POST "localhost:8080/api/v1/users" \
 > --header "Content-Type: application/json" \
@@ -32,7 +33,8 @@ $ curl --location --request POST "localhost:8080/api/v1/users" \
 > "email": "alterra@email.com",
 > "password": "passwordtest123"
 > }'
-
+```
+```
 $ Response:
 
 {
