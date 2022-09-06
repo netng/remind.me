@@ -43,4 +43,10 @@ public class UsersController {
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long userId, @RequestBody UserRequestDTO requestDTO) {
         return ResponseEntity.ok().body(userService.updateUser(userId, requestDTO));
     }
+
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UserResponseDTO> showUserDetail(@PathVariable Long userId) {
+        return ResponseEntity.ok().body(userService.showUserDetail(userId));
+    }
 }
