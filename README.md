@@ -26,7 +26,7 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
 </pre>
 - <strong>Register New User</strong>
 <pre>
-    $ curl --location --request POST "localhost:8080/api/v1/users" \
+    $ curl --location --request POST "localhost:8080/api/v1/users/signup" \
     > --header "Content-Type: application/json" \
     > --data-raw '{
     > "full_name": "alterra",
@@ -43,4 +43,23 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
         "full_name": "alterra"
     }
 </pre>
-- 
+
+- Update User
+<pre>
+    $ curl --location --request PUT "localhost:8080/api/v1/users/signup" \
+    > --header "Content-Type: application/json" \
+    > --data-raw '{
+    > "full_name": "alta",
+    > "email": "alta@email.com",
+    > "password": "passwordtest123"
+    > }'
+</pre>
+<pre>
+    <b>$ Response:</b>
+
+    {
+        "id": 5,
+        "email": "alta@email.com",
+        "full_name": "alta"
+    }
+</pre>
