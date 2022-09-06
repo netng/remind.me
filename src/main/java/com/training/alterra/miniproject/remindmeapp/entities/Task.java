@@ -34,5 +34,6 @@ public class Task {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 }

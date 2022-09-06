@@ -1,10 +1,12 @@
 package com.training.alterra.miniproject.remindmeapp.entities;
 
+import jdk.jfr.DataAmount;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,13 +24,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, updatable = false)
     private String fullName;
 
-    @Column(nullable = false, updatable = false)
     private String email;
 
-    @Column(nullable = false, updatable = false)
     private String password;
 
     @Column(nullable = false, updatable = false)
