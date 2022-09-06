@@ -129,6 +129,8 @@ public class UserServiceTest {
 
         given(userRepository.findById(user.getId()))
                 .willReturn(Optional.of(user));
+        when(userRepository.save(any(User.class)))
+                .thenReturn(user);
 
         userService.updateUser(user.getId(), newUserDTO);
 
