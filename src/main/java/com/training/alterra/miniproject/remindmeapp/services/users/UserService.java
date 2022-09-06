@@ -53,15 +53,13 @@ public class UserService implements IUserService{
 
     @Override
     public UserResponseDTO updateUser(Long userId, UserRequestDTO requestDTO) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundException(userId);
-        } else {
-            userRepository.findById(userId);
-            User userUpdate = convertToEntity(requestDTO);
-            User updatedUser = userRepository.save(userUpdate);
-            return convertToDto(updatedUser);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        User userUpdate = convertToEntity(requestDTO);
+        userUpdate.setId(userId);
+        User updatedUser = userRepository.save(userUpdate);
+        return convertToDto(updatedUser);
 
     }
 
