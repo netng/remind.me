@@ -24,7 +24,7 @@ $ response:
     }
 ]
 ```
-- <strong>Crate New User</strong>
+- <strong>Register New User</strong>
 ```
 $ curl --location --request POST "localhost:8080/api/v1/users" \
 > --header "Content-Type: application/json" \
