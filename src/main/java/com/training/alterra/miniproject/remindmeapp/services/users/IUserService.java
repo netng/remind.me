@@ -11,7 +11,7 @@ public interface IUserService {
     //User createNewUser(User user);
     UserResponseDTO createNewUser(UserRequestDTO requestDTO);
 
-    List<User> listAllUsers();
+    List<UserResponseDTO> listAllUsers();
 
     void deleteUser(Long userId);
 

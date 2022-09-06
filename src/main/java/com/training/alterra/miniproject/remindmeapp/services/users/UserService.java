@@ -9,8 +9,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService{
@@ -29,8 +31,16 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public List<User> listAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> listAllUsers() {
+        List<User> users = userRepository.findAll();
+        if (!users.isEmpty()) {
+            return users.stream()
+                    .map(user -> modelMapper.map(user, UserResponseDTO.class))
+                    .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
+
     }
 
     @Override
