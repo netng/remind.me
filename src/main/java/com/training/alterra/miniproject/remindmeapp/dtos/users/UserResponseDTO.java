@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
+@EqualsAndHashCode
 public class UserResponseDTO implements Serializable {
     private Long id;
 
