@@ -17,5 +17,5 @@ public interface IUserService {
 
     UserResponseDTO updateUser(Long userId, UserRequestDTO requestDTO);
 
-    User showUserDetail(Long userId);
+    UserResponseDTO showUserDetail(Long userId);
 }
