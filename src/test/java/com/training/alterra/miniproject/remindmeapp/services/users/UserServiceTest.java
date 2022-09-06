@@ -159,9 +159,11 @@ public class UserServiceTest {
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
 
-        User expected = userService.showUserDetail(user.getId());
+        UserResponseDTO currentUser = modelMapper.map(user, UserResponseDTO.class);
 
-        assertThat(expected).isSameAs(user);
+        UserResponseDTO expected = userService.showUserDetail(user.getId());
+
+        assertThat(expected).isSameAs(currentUser);
         verify(userRepository).findById(user.getId());
     }
 
