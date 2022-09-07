@@ -4,6 +4,10 @@ import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderReque
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
 
+import java.util.List;
+
 public interface IReminderService {
     ReminderResponseDTO createNewReminder(Long userId, ReminderRequestDTO requestDTO);
+
+    List<ReminderResponseDTO> listAllReminders(Long userId);
 }

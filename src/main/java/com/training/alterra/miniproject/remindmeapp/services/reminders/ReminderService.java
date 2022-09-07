@@ -4,13 +4,17 @@ import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderReque
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
+import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.ReminderRepository;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReminderService implements IReminderService {
@@ -32,6 +36,22 @@ public class ReminderService implements IReminderService {
                 });
 
         return convertToDto(reminder.get());
+    }
+
+    @Override
+    public List<ReminderResponseDTO> listAllReminders(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        List<Reminder> reminders = reminderRepository.findByUserId(userId);
+
+        if (!reminders.isEmpty()) {
+            return reminders.stream()
+                    .map(reminder -> convertToDto(reminder))
+                    .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
     }
 
 
