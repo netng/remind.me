@@ -1,26 +1,35 @@
-name: Maven Run Tests when push to main branch and development
+name: Java
 
 on:
-  # Trigger the workflow on push for the main branch
-  # and pull request for main and card-* prefix branches
   push:
-    branches:
-      - main
-    pull_request:
-      branches:
-        - main
-        - development
+  workflow_dispatch:
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Set up JDK 1.11
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '18'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Test with Maven
-        run: mvn -B test --file pom.xml
+
+      - name: Build
+        run: mvn --batch-mode -DskipTests package
+
+      - name: Test
+        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+
+      - name: Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Maven Tests
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: true
