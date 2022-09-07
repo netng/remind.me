@@ -13,6 +13,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class ReminderResponseDTO implements Serializable {
     private Long id;
-    private String name;
+    private String title;
     private String description;
 }

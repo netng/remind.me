@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReminderRequestDTO implements Serializable {
-    private String name;
+    private String title;
     private String description;
 
     private User user;
