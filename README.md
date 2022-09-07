@@ -3,7 +3,7 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
 
 # API Documentations
 ### Users
-- <strong>List Users</strong>
+- <strong>List Users `GET /api/v1/users`</strong>
 
 <pre>
     $ curl --location --request GET "localhost:8080/api/v1/users"`
@@ -24,7 +24,7 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
         }
     ]
 </pre>
-- <strong>Register New User</strong>
+- <strong>Register New User `POST /api/v1/users/signup`</strong>
 <pre>
     $ curl --location --request POST "localhost:8080/api/v1/users/signup" \
     > --header "Content-Type: application/json" \
@@ -44,9 +44,9 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
     }
 </pre>
 
-- Update User
+- <strong>Update User `PUT /api/v1/users/{id}`</strong>
 <pre>
-    $ curl --location --request PUT "localhost:8080/api/v1/users/signup" \
+    $ curl --location --request PUT "localhost:8080/api/v1/users/5" \
     > --header "Content-Type: application/json" \
     > --data-raw '{
     > "full_name": "alta",
