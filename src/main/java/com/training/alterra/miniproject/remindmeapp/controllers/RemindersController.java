@@ -36,4 +36,16 @@ public class RemindersController {
     public void deleteReminder(@PathVariable Long reminderId) {
         reminderService.deleteReminder(reminderId);
     }
+
+    @PutMapping("/reminders/{reminderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ReminderResponseDTO> updateReminder(@PathVariable Long reminderId, @RequestBody ReminderRequestDTO requestDTO) {
+        return ResponseEntity.ok().body(reminderService.updateReminder(reminderId, requestDTO));
+    }
+
+    @GetMapping("/reminders/{reminderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ReminderResponseDTO> showReminderDetail(@PathVariable Long reminderId) {
+        return ResponseEntity.ok().body(reminderService.showReminderDetail(reminderId));
+    }
 }
