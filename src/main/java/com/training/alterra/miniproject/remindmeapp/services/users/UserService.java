@@ -3,7 +3,7 @@ package com.training.alterra.miniproject.remindmeapp.services.users;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
-import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class UserService implements IUserService{
     @Override
     public void deleteUser(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new ResourceNotFoundException(userId));
 
         userRepository.deleteById(userId);
     }
@@ -59,7 +59,7 @@ public class UserService implements IUserService{
      */
     public UserResponseDTO updateUser(Long userId, UserRequestDTO requestDTO) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new ResourceNotFoundException(userId));
 
         User userUpdate = convertToEntity(requestDTO);
         userUpdate.setId(userId);
@@ -71,7 +71,7 @@ public class UserService implements IUserService{
     @Override
     public UserResponseDTO showUserDetail(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new ResourceNotFoundException(userId));
         Optional<User> user = userRepository.findById(userId);
         return convertToDto(Optional.of(user).get().get());
     }
