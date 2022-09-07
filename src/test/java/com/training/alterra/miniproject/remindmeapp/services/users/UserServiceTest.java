@@ -3,7 +3,7 @@ package com.training.alterra.miniproject.remindmeapp.services.users;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
-import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -130,7 +130,7 @@ public class UserServiceTest {
 
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowException_whenUserNotFound_onUpdateUser() {
         User user = modelMapper.map(newUserDTO(), User.class);
         user.setId(1L);
@@ -160,7 +160,7 @@ public class UserServiceTest {
         assertEquals(expected, currentUser);
     }
 
-    @Test(expected = UserNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowException_whenUserNotFound_onShowUserDetail() {
         User user = modelMapper.map(newUserDTO(), User.class);
         System.out.println(user);
