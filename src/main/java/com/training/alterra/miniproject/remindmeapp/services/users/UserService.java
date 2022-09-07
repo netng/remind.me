@@ -73,7 +73,7 @@ public class UserService implements IUserService{
         userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(userId));
         Optional<User> user = userRepository.findById(userId);
-        return convertToDto(Optional.of(user).get().get());
+        return convertToDto(user.get());
     }
 
     private User convertToEntity(UserRequestDTO requestDTO) {
