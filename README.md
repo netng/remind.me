@@ -62,4 +62,5 @@ Aplikasi ini adalah aplikasi REST API mini project training alterra.
         "email": "alta@email.com",
         "full_name": "alta"
     }
+
 </pre>
