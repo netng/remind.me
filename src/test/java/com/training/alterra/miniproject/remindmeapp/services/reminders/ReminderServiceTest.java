@@ -6,7 +6,7 @@ import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
-import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.ReminderRepository;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import com.training.alterra.miniproject.remindmeapp.services.users.UserService;
@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willCallRealMethod;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,33 +52,24 @@ public class ReminderServiceTest {
     }
     @Test
     public void createNewReminder_shouldReturnNewCreatedReminder() {
-        User user = new User();
-        user.setId(1L);
-        user.setFullName("nandang");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
 
-        ReminderRequestDTO requestDTO = new ReminderRequestDTO();
-        requestDTO.setName("Angkat jemuran");
-        requestDTO.setDescription("angkat jemuran jangan sampai ke hujanan");
-
-        Reminder reminder = modelMapper.map(requestDTO, Reminder.class);
+        Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
         reminder.setId(1L);
-        reminder.setUser(user);
+        reminder.setUser(setUser());
 
         when(reminderRepository.save(any(Reminder.class)))
                 .thenReturn(reminder);
 
-        given(userRepository.findById(user.getId()))
-                .willReturn(Optional.of(user));
+        given(userRepository.findById(setUser().getId()))
+                .willReturn(Optional.of(setUser()));
 
-        ReminderResponseDTO reminderCreated = reminderService.createNewReminder(user.getId(), requestDTO);
+        ReminderResponseDTO reminderCreated = reminderService.createNewReminder(setUser().getId(), setReminderDTO());
 
         assertThat(reminderCreated.getId())
                 .isNotNull();
 
-        assertThat(reminderCreated.getName())
-                .isSameAs(reminder.getName());
+        assertThat(reminderCreated.getTitle())
+                .isSameAs(reminder.getTitle());
 
         assertThat(reminderCreated.getDescription())
                 .isSameAs(reminder.getDescription());
@@ -86,60 +78,38 @@ public class ReminderServiceTest {
 
     @Test
     public void listAllReminders_shouldReturnListOfReminders() {
-        User user = new User();
-        user.setId(1L);
-        user.setFullName("nandang");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
-
-        ReminderRequestDTO requestDTO = new ReminderRequestDTO();
-        requestDTO.setName("Angkat jemuran");
-        requestDTO.setDescription("angkat jemuran jangan sampai ke hujanan");
-
-        Reminder reminder = modelMapper.map(requestDTO, Reminder.class);
+        Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
         reminder.setId(1L);
-        reminder.setUser(user);
+        reminder.setUser(setUser());
 
         when(reminderRepository.save(any(Reminder.class)))
                 .thenReturn(reminder);
 
-        given(userRepository.findById(user.getId()))
-                .willReturn(Optional.of(user));
+        given(userRepository.findById(setUser().getId()))
+                .willReturn(Optional.of(setUser()));
 
-        List<ReminderResponseDTO> responseDTO = reminderService.listAllReminders(user.getId());
+        List<ReminderResponseDTO> responseDTO = reminderService.listAllReminders(setUser().getId());
         assertNotNull(responseDTO);
     }
 
-    /**
     @Test
-    public void deleteUser_ifGivenIdFound() {
-        User user = new User();
-        user.setFullName("nandang");
-        user.setPassword("password");
-        user.setEmail("net.nandang@gmail.com");
-        user.setId(1L);
+    public void deleteReminder_whenReminderIdFound() {
+        Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
+        reminder.setId(1L);
+        reminder.setUser(setUser());
 
-        when(userRepository.findById(user.getId()))
-                .thenReturn(Optional.of(user));
+        given(reminderRepository.findById(reminder.getId()))
+                .willReturn(Optional.of(reminder));
 
-        userService.deleteUser(user.getId());
-        verify(userRepository).deleteById(user.getId());
+        reminderService.deleteReminder(reminder.getId());
+
     }
 
-    @Test(expected = RuntimeException.class)
-    public void shouldThrowException_whenUserNotFound_onDeleteUser() {
-        User user = new User();
-        user.setId(69L);
-        user.setFullName("nandang super papa");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
-
-        given(userRepository.findById(anyLong()))
-                .willReturn(Optional.ofNullable(null));
-
-        userService.deleteUser(user.getId());
+    @Test(expected = ResourceNotFoundException.class)
+    public void shouldThrowException_whenReminderIdNotFound_onDeleteReminder() {
     }
 
+    /**
     @Test
     public void updateUser_whenGivenIdFound() {
         User user = modelMapper.map(newUserDTO(), User.class);
@@ -203,4 +173,22 @@ public class ReminderServiceTest {
         return userDTO;
     }
     */
+
+    private User setUser() {
+        User user = new User();
+        user.setId(1L);
+        user.setFullName("nandang");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
+
+        return user;
+    }
+
+    private ReminderRequestDTO setReminderDTO() {
+        ReminderRequestDTO requestDTO = new ReminderRequestDTO();
+        requestDTO.setTitle("Angkat jemuran");
+        requestDTO.setDescription("angkat jemuran jangan sampai ke hujanan");
+
+        return requestDTO;
+    }
 }
