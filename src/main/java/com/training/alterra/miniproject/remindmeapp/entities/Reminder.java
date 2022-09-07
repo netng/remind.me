@@ -21,7 +21,7 @@ public class Reminder {
     @Id
     private Long id;
 
-    private String name;
+    private String title;
 
     private String description;
 
