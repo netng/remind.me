@@ -1,9 +1,9 @@
 package com.training.alterra.miniproject.remindmeapp.exceptions;
 
-public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(Long id) {
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(Long id) {
         super(String.format(
-                "Could not find user with id: %s",
+                "Could not find resource with id: %s",
                 id
         ));
     }
