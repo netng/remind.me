@@ -1,4 +1,15 @@
 package com.training.alterra.miniproject.remindmeapp.dtos.reminders;
 
-public class ReminderResponseDTO {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ReminderResponseDTO implements Serializable {
+    private String name;
+    private String description;
 }
