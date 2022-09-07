@@ -102,61 +102,69 @@ public class ReminderServiceTest {
                 .willReturn(Optional.of(reminder));
 
         reminderService.deleteReminder(reminder.getId());
+        verify(reminderRepository).deleteById(reminder.getId());
 
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void shouldThrowException_whenReminderIdNotFound_onDeleteReminder() {
-    }
-
-    /**
-    @Test
-    public void updateUser_whenGivenIdFound() {
-        User user = modelMapper.map(newUserDTO(), User.class);
-        user.setId(1L);
-
-        UserRequestDTO newUserDTO = new UserRequestDTO();
-        newUserDTO.setFullName("nandang ganteng");
-
-        given(userRepository.findById(user.getId()))
-                .willReturn(Optional.of(user));
-        when(userRepository.save(any(User.class)))
-                .thenReturn(user);
-
-        userService.updateUser(user.getId(), newUserDTO);
-
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void shouldThrowException_whenUserNotFound_onUpdateUser() {
-        User user = modelMapper.map(newUserDTO(), User.class);
-        user.setId(1L);
-
-        UserRequestDTO newUserDTO = new UserRequestDTO();
-        newUserDTO.setFullName("nandang papa");
-
-        given(userRepository.findById(anyLong()))
+        given(reminderRepository.findById(anyLong()))
                 .willReturn(Optional.ofNullable(null));
 
-        userService.updateUser(user.getId(), newUserDTO);
+        reminderService.deleteReminder(setUser().getId());
+    }
+
+    @Test
+    public void updateUser_whenGivenIdFound() {
+        Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
+        reminder.setId(1L);
+        reminder.setUser(setUser());
+
+        ReminderRequestDTO newReminderDTO = new ReminderRequestDTO();
+        newReminderDTO.setTitle("latihan coding");
+
+        given(reminderRepository.findById(reminder.getId()))
+                .willReturn(Optional.of(reminder));
+
+        when(reminderRepository.save(any(Reminder.class)))
+                .thenReturn(reminder);
+
+        ReminderResponseDTO expected = reminderService.updateReminder(reminder.getId(), newReminderDTO);
+        assertThat(expected.getTitle().equals(newReminderDTO.getTitle()));
+
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void shouldThrowException_whenUserNotFound_onUpdateUser() {
+        Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
+        reminder.setUser(setUser());
+
+        ReminderRequestDTO newReminderDTO = new ReminderRequestDTO();
+        newReminderDTO.setTitle("bikin kue");
+
+        given(reminderRepository.findById(anyLong()))
+                .willReturn(Optional.ofNullable(null));
+
+        reminderService.updateReminder(reminder.getId(), newReminderDTO);
     }
 
     @Test
     public void showUserDetail_whenUserFound() {
-        User user = modelMapper.map(newUserDTO(), User.class);
-        user.setId(1L);
-        userRepository.save(user);
+        Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
+        reminder.setUser(setUser());
 
-        given(userRepository.findById(user.getId()))
-                .willReturn(Optional.of(user));
+        given(reminderRepository.findById(reminder.getId()))
+                .willReturn(Optional.of(reminder));
 
-        UserResponseDTO currentUser = modelMapper.map(user, UserResponseDTO.class);
+        ReminderResponseDTO currentReminder = modelMapper.map(reminder, ReminderResponseDTO.class);
 
-        UserResponseDTO expected = userService.showUserDetail(user.getId());
+        ReminderResponseDTO expected = reminderService.showReminderDetail(reminder.getId());
 
-        assertEquals(expected, currentUser);
+        assertEquals(expected, currentReminder);
     }
 
+
+    /**
     @Test(expected = UserNotFoundException.class)
     public void shouldThrowException_whenUserNotFound_onShowUserDetail() {
         User user = modelMapper.map(newUserDTO(), User.class);
