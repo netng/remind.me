@@ -10,13 +10,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "tasks")
-@Entity(name = "Task")
+@Table(name = "reminders")
+@Entity(name = "Reminder")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@DynamicUpdate
-public class Task {
+public class Reminder {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
