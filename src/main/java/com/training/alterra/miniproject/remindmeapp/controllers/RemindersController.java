@@ -30,4 +30,10 @@ public class RemindersController {
         List<ReminderResponseDTO> reminderResponseDTOS = reminderService.listAllReminders(userId);
         return ResponseEntity.ok().body(reminderResponseDTOS);
     }
+
+    @DeleteMapping("/reminders/{reminderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReminder(@PathVariable Long reminderId) {
+        reminderService.deleteReminder(reminderId);
+    }
 }
