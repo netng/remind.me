@@ -1,7 +1,6 @@
 package com.training.alterra.miniproject.remindmeapp.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,8 +12,9 @@ import java.util.Date;
 @Table(name = "reminders")
 @Entity(name = "Reminder")
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Reminder {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
