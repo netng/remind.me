@@ -5,7 +5,6 @@ import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
 import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
-import com.training.alterra.miniproject.remindmeapp.services.users.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -116,12 +115,7 @@ public class UserServiceTest {
 
     @Test
     public void updateUser_whenGivenIdFound() {
-        UserRequestDTO userDTO = new UserRequestDTO();
-        userDTO.setFullName("nandang super papa");
-        userDTO.setEmail("net.nandang@gmail.com");
-        userDTO.setPassword("password");
-
-        User user = modelMapper.map(userDTO, User.class);
+        User user = modelMapper.map(newUserDTO(), User.class);
         user.setId(1L);
 
         UserRequestDTO newUserDTO = new UserRequestDTO();
@@ -152,33 +146,24 @@ public class UserServiceTest {
 
     @Test
     public void showUserDetail_whenUserFound() {
-        User user = new User();
-        user.setId(69L);
-        user.setFullName("nandang");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
+        User user = modelMapper.map(newUserDTO(), User.class);
+        user.setId(1L);
+        userRepository.save(user);
 
-        when(userRepository.findById(user.getId()))
-                .thenReturn(Optional.of(user));
+        given(userRepository.findById(user.getId()))
+                .willReturn(Optional.of(user));
 
         UserResponseDTO currentUser = modelMapper.map(user, UserResponseDTO.class);
 
         UserResponseDTO expected = userService.showUserDetail(user.getId());
 
-        assertThat(expected).isSameAs(currentUser);
-        verify(userRepository).findById(user.getId());
+        assertEquals(expected, currentUser);
     }
 
     @Test(expected = UserNotFoundException.class)
     public void shouldThrowException_whenUserNotFound_onShowUserDetail() {
-        User user = new User();
-        user.setId(69L);
-        user.setFullName("nandang");
-        user.setEmail("net.nandang@gmail.com");
-        user.setPassword("password");
-
-        given(userRepository.findById(anyLong()))
-                .willReturn(Optional.ofNullable(null));
+        User user = modelMapper.map(newUserDTO(), User.class);
+        System.out.println(user);
         userService.showUserDetail(user.getId());
     }
 
