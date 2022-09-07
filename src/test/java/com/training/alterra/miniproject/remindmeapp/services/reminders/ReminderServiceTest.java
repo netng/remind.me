@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -83,25 +84,33 @@ public class ReminderServiceTest {
 
     }
 
-    /**
     @Test
-    public void listAllUsers_shouldReturnListOfUsers() {
-        List<User> users = new ArrayList<>();
-        users.add(new User());
+    public void listAllReminders_shouldReturnListOfReminders() {
+        User user = new User();
+        user.setId(1L);
+        user.setFullName("nandang");
+        user.setEmail("net.nandang@gmail.com");
+        user.setPassword("password");
 
-        given(userRepository.findAll())
-                .willReturn(users);
+        ReminderRequestDTO requestDTO = new ReminderRequestDTO();
+        requestDTO.setName("Angkat jemuran");
+        requestDTO.setDescription("angkat jemuran jangan sampai ke hujanan");
 
-        List<UserResponseDTO> responseDto = users.stream()
-                .map(user -> modelMapper.map(user, UserResponseDTO.class))
-                .collect(Collectors.toList());
+        Reminder reminder = modelMapper.map(requestDTO, Reminder.class);
+        reminder.setId(1L);
+        reminder.setUser(user);
 
-        List<UserResponseDTO> expected = userService.listAllUsers();
+        when(reminderRepository.save(any(Reminder.class)))
+                .thenReturn(reminder);
 
-        assertEquals(expected, responseDto);
-        verify(userRepository).findAll();
+        given(userRepository.findById(user.getId()))
+                .willReturn(Optional.of(user));
+
+        List<ReminderResponseDTO> responseDTO = reminderService.listAllReminders(user.getId());
+        assertNotNull(responseDTO);
     }
 
+    /**
     @Test
     public void deleteUser_ifGivenIdFound() {
         User user = new User();
