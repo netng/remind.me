@@ -4,7 +4,7 @@ import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderReque
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
-import com.training.alterra.miniproject.remindmeapp.exceptions.UserNotFoundException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.ReminderRepository;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -41,7 +41,7 @@ public class ReminderService implements IReminderService {
     @Override
     public List<ReminderResponseDTO> listAllReminders(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new ResourceNotFoundException(userId));
 
         List<Reminder> reminders = reminderRepository.findByUserId(userId);
 
@@ -52,6 +52,14 @@ public class ReminderService implements IReminderService {
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public void deleteReminder(Long reminderId) {
+        reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new ResourceNotFoundException(reminderId));
+
+        reminderRepository.deleteById(reminderId);
     }
 
 

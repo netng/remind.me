@@ -10,4 +10,6 @@ public interface IReminderService {
     ReminderResponseDTO createNewReminder(Long userId, ReminderRequestDTO requestDTO);
 
     List<ReminderResponseDTO> listAllReminders(Long userId);
+
+    void deleteReminder(Long reminderId);
 }
