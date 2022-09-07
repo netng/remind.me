@@ -23,6 +23,8 @@ public class Reminder {
 
     private String name;
 
+    private String description;
+
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
