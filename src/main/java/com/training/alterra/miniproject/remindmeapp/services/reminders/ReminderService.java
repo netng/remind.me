@@ -62,6 +62,26 @@ public class ReminderService implements IReminderService {
         reminderRepository.deleteById(reminderId);
     }
 
+    @Override
+    public ReminderResponseDTO updateReminder(Long reminderId, ReminderRequestDTO requestDTO) {
+       Reminder reminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new ResourceNotFoundException(reminderId));
+
+        reminder.setTitle(requestDTO.getTitle());
+        reminder.setDescription(requestDTO.getDescription());
+
+        return convertToDto(reminderRepository.save(reminder));
+    }
+
+    @Override
+    public ReminderResponseDTO showReminderDetail(Long reminderId) {
+        reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new ResourceNotFoundException(reminderId));
+
+        Optional<Reminder> reminder = reminderRepository.findById(reminderId);
+        return convertToDto(reminder.get());
+    }
+
 
     private Reminder convertToEntity(ReminderRequestDTO requestDTO) {
         return modelMapper.map(requestDTO, Reminder.class);
