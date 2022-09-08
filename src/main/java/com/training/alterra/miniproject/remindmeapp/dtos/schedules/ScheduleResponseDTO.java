@@ -20,7 +20,7 @@ import java.util.Date;
 public class ScheduleResponseDTO implements Serializable {
     private Long id;
 
-    @JsonProperty("date_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Jakarta")
-    private Date reminderDate;
+    @JsonProperty("reminder_date_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
+    private LocalDateTime reminderDateTime;
 }

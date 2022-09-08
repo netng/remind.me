@@ -21,7 +21,7 @@ public class Schedule {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date reminderDate;
+    private LocalDateTime reminderDateTime;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

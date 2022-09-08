@@ -15,9 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleRequestDTO implements Serializable {
-    @JsonProperty("date_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date reminderDate;
+    @JsonProperty("reminder_date_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime reminderDateTime;
 
     private Reminder reminder;
 }
