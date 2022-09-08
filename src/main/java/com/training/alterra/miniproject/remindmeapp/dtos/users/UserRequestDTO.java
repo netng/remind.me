@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.util.Date;
 
 
@@ -22,4 +23,7 @@ public class UserRequestDTO implements Serializable {
     private String email;
 
     private String password;
+
+    @JsonProperty("time_zone")
+    private ZoneId timeZone;
 }

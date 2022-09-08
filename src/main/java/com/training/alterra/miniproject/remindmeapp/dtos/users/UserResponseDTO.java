@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.util.Date;
 
 
@@ -22,6 +23,9 @@ public class UserResponseDTO implements Serializable {
     private String fullName;
 
     private String email;
+
+    @JsonProperty("time_zone")
+    private ZoneId timeZone;
 
     @JsonIgnore
     private String password;
