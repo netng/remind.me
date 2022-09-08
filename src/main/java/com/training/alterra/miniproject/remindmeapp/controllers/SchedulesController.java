@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 public class SchedulesController {
@@ -18,9 +20,15 @@ public class SchedulesController {
     @PostMapping("/reminders/{reminderId}/schedules")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ScheduleResponseDTO> createNewSchedule(@PathVariable Long reminderId, @RequestBody ScheduleRequestDTO requestDTO) {
-        ScheduleResponseDTO responseDTO = scheduleService.createNewSchedule(reminderId, requestDTO);
-        return ResponseEntity.ok().body(responseDTO);
+        ScheduleResponseDTO schedule = scheduleService.createNewSchedule(reminderId, requestDTO);
+        return ResponseEntity.ok().body(schedule);
+    }
 
+    @GetMapping("/reminders/{reminderId}/schedules")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ScheduleResponseDTO>> listAllSchedules(@PathVariable Long reminderId) {
+        List<ScheduleResponseDTO> schedules = scheduleService.showAllSchedules(reminderId);
+        return ResponseEntity.ok().body(schedules);
 
     }
 }
