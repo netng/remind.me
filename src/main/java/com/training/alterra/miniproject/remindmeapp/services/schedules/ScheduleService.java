@@ -96,8 +96,8 @@ public class ScheduleService implements IScheduleService {
         jobDataMap.put("reminderDescription", reminder.getDescription());
 
         return JobBuilder.newJob(ReminderJob.class)
-                .withIdentity(UUID.randomUUID().toString(), "email-jobs")
-                .withDescription("Send Email Job")
+                .withIdentity(UUID.randomUUID().toString(), "reminder-jobs")
+                .withDescription("Send Reminder Job")
                 .usingJobData(jobDataMap)
                 .storeDurably()
                 .build();
@@ -106,8 +106,8 @@ public class ScheduleService implements IScheduleService {
     private Trigger buildJobTrigger(JobDetail jobDetail, ZonedDateTime startAt) {
         return TriggerBuilder.newTrigger()
                 .forJob(jobDetail)
-                .withIdentity(jobDetail.getKey().getName(), "email-triggers")
-                .withDescription("Send Email Trigger")
+                .withIdentity(jobDetail.getKey().getName(), "reminder-triggers")
+                .withDescription("Send Reminder Trigger")
                 .startAt(Date.from(startAt.toInstant()))
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule().withMisfireHandlingInstructionFireNow())
                 .build();
