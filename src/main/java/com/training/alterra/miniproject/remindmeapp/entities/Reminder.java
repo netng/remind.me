@@ -7,7 +7,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "reminders")
 @Entity(name = "Reminder")
@@ -38,4 +40,11 @@ public class Reminder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(
+            mappedBy = "reminder",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Schedule> schedules = new ArrayList<>();
 }
