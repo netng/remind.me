@@ -15,4 +15,11 @@ public class UserNotFoundAdvice {
     String userNotFoundHandler(ResourceNotFoundException exception) {
         return exception.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidReminderDateTimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String invalidReminderDateTimeHandler(InvalidReminderDateTimeException exception) {
+        return exception.getMessage();
+    }
 }
