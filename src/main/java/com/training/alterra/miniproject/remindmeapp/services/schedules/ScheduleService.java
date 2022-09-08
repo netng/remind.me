@@ -5,6 +5,7 @@ import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleRespo
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
 import com.training.alterra.miniproject.remindmeapp.entities.Schedule;
 import com.training.alterra.miniproject.remindmeapp.exceptions.InvalidReminderDateTimeException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.jobs.ReminderJob;
 import com.training.alterra.miniproject.remindmeapp.repositories.ReminderRepository;
 import com.training.alterra.miniproject.remindmeapp.repositories.ScheduleRepository;
@@ -15,9 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ScheduleService implements IScheduleService {
@@ -61,6 +61,22 @@ public class ScheduleService implements IScheduleService {
         } catch (SchedulerException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<ScheduleResponseDTO> showAllSchedules(Long reminderId) {
+        reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new ResourceNotFoundException(reminderId));
+
+        List<Schedule> schedules = scheduleRepository.findByReminderId(reminderId);
+
+        if (!schedules.isEmpty()) {
+            return schedules.stream()
+                    .map(schedule -> convertToDto(schedule))
+                    .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
     }
 
     private Schedule convertToEntity(ScheduleRequestDTO requestDTO) {
