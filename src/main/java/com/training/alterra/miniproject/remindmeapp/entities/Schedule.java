@@ -20,7 +20,7 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime reminderDateTime;
 
     @Column(nullable = false, updatable = false)
