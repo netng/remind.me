@@ -1,6 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
@@ -8,6 +9,8 @@ import com.training.alterra.miniproject.remindmeapp.exceptions.EntityNotFoundExc
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -32,21 +35,33 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public BaseResponseDTO<String, String, List<UserResponseDTO>> listAllUsers() {
-        List<User> users = userRepository.findAll();
+    public PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> listAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
         if (!users.isEmpty()) {
             List<UserResponseDTO> usersDTO =  users.stream()
                     .map(user -> modelMapper.map(user, UserResponseDTO.class))
                     .collect(Collectors.toList());
 
-            BaseResponseDTO<String, String, List<UserResponseDTO>> responseDTO = new BaseResponseDTO<>(
-                    "OK", "Successfully retrieving data", usersDTO
+            PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> responseDTO = new PaginatedBaseResponseDTO<>(
+                    "OK",
+                   "Successfully retrieving data",
+                    usersDTO,
+                    users.getTotalElements(),
+                    users.getTotalPages(),
+                    users.getNumber()
             );
 
             return responseDTO;
         }
 
-        return new BaseResponseDTO<>("OK", "Data is empty", Collections.emptyList());
+        return new PaginatedBaseResponseDTO<>(
+               "OK",
+               "Data is empty",
+                Collections.emptyList(),
+                users.getTotalElements(),
+                users.getTotalPages(),
+                users.getNumber()
+        );
 
     }
 

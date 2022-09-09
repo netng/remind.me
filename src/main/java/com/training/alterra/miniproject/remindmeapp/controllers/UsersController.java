@@ -2,11 +2,13 @@ package com.training.alterra.miniproject.remindmeapp.controllers;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
 import com.training.alterra.miniproject.remindmeapp.services.users.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,8 @@ public class UsersController {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BaseResponseDTO<String, String, List<UserResponseDTO>>> listAllUsers() {
-        BaseResponseDTO<String, String, List<UserResponseDTO>> response = userService.listAllUsers();
+    public ResponseEntity<PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>>> listAllUsers(Pageable pageable) {
+        PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> response = userService.listAllUsers(pageable);
         return ResponseEntity.ok().body(response);
     }
 

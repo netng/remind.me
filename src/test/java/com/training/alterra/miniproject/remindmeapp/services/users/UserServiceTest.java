@@ -1,6 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
@@ -14,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 import java.util.ArrayList;
@@ -72,18 +75,18 @@ public class UserServiceTest {
         List<User> users = new ArrayList<>();
         users.add(new User());
 
-        given(userRepository.findAll())
+        given(userRepository.findAll(Pageable.cl))
                 .willReturn(users);
 
-        List<UserResponseDTO> responseDto = users.stream()
-                .map(user -> modelMapper.map(user, UserResponseDTO.class))
+        Page<PaginatedBaseResponseDTO> responseDto = users.stream()
+                .map(user -> modelMapper.map(user, PaginatedBaseResponseDTO.class))
                 .collect(Collectors.toList());
 
         BaseResponseDTO<String, String, List<UserResponseDTO>> response = new BaseResponseDTO<>(
                 "OK", "Sucsessfully retrieving data", responseDto
         );
 
-        BaseResponseDTO<String, String, List<UserResponseDTO>> expected = userService.listAllUsers();
+        PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> expected = userService.listAllUsers(users);
 
         assertThat(expected.equals(response));
         verify(userRepository).findAll();
