@@ -1,16 +1,18 @@
 package com.training.alterra.miniproject.remindmeapp.services.reminders;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IReminderService {
     BaseResponseDTO<String, String, ReminderResponseDTO> createNewReminder(Long userId, ReminderRequestDTO requestDTO);
 
-    BaseResponseDTO<String, String, List<ReminderResponseDTO>> listAllReminders(Long userId);
+    PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> listAllReminders(Long userId, Pageable pageable);
 
     BaseResponseDTO<String, String, ReminderResponseDTO> deleteReminder(Long reminderId);
 

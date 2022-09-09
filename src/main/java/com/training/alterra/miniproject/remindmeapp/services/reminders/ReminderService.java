@@ -1,6 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.services.reminders;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
@@ -9,6 +10,8 @@ import com.training.alterra.miniproject.remindmeapp.repositories.ReminderReposit
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -39,21 +42,35 @@ public class ReminderService implements IReminderService {
     }
 
     @Override
-    public BaseResponseDTO<String, String, List<ReminderResponseDTO>> listAllReminders(Long userId) {
+    public PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> listAllReminders(Long userId, Pageable pageable) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(userId));
 
-        List<Reminder> reminders = reminderRepository.findByUserId(userId);
+        Page<Reminder> reminders = reminderRepository.findByUserId(userId, pageable);
 
         if (!reminders.isEmpty()) {
             List<ReminderResponseDTO> responseDTO = reminders.stream()
                     .map(reminder -> convertToDto(reminder))
                     .collect(Collectors.toList());
 
-            return new BaseResponseDTO<>("OK", "Successfully retrieving data", responseDTO);
+            return new PaginatedBaseResponseDTO<>(
+                    "OK",
+                    "Successfully retrieving data",
+                    responseDTO,
+                    reminders.getTotalElements(),
+                    reminders.getTotalPages(),
+                    reminders.getNumber()
+            );
         }
 
-        return new BaseResponseDTO<>("OK", "Data is empty", Collections.emptyList());
+        return new PaginatedBaseResponseDTO<>(
+                "OK",
+                "Data is empty",
+                Collections.emptyList(),
+                reminders.getTotalElements(),
+                reminders.getTotalPages(),
+                reminders.getNumber()
+        );
     }
 
     @Override

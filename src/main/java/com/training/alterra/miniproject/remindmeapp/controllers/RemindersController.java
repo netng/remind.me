@@ -2,11 +2,13 @@ package com.training.alterra.miniproject.remindmeapp.controllers;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.services.reminders.IReminderService;
 import com.training.alterra.miniproject.remindmeapp.services.reminders.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,8 @@ public class RemindersController {
 
     @GetMapping("/users/{userId}/reminders")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BaseResponseDTO<String, String, List<ReminderResponseDTO>>> listAllReminders(@PathVariable Long userId) {
-        BaseResponseDTO<String, String, List<ReminderResponseDTO>> reminderResponseDTOS = reminderService.listAllReminders(userId);
+    public ResponseEntity<PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>>> listAllReminders(@PathVariable Long userId, Pageable pageable) {
+        PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> reminderResponseDTOS = reminderService.listAllReminders(userId, pageable);
         return ResponseEntity.ok().body(reminderResponseDTOS);
     }
 
