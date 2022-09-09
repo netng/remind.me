@@ -1,5 +1,6 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
+import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
@@ -9,13 +10,13 @@ import java.util.Optional;
 
 public interface IUserService {
     //User createNewUser(User user);
-    UserResponseDTO createNewUser(UserRequestDTO requestDTO);
+    BaseResponseDTO<String, String, UserResponseDTO> createNewUser(UserRequestDTO requestDTO);
 
-    List<UserResponseDTO> listAllUsers();
+    BaseResponseDTO<String, String, List<UserResponseDTO>> listAllUsers();
 
-    void deleteUser(Long userId);
+    BaseResponseDTO<String, String, String> deleteUser(Long userId);
 
-    UserResponseDTO updateUser(Long userId, UserRequestDTO requestDTO);
+    BaseResponseDTO<String, String, UserResponseDTO> updateUser(Long userId, UserRequestDTO requestDTO);
 
-    UserResponseDTO showUserDetail(Long userId);
+    BaseResponseDTO<String, String, UserResponseDTO> showUserDetail(Long userId);
 }

@@ -1,5 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.controllers;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
@@ -20,33 +22,34 @@ public class UsersController {
 
     @PostMapping("/users/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserResponseDTO> createNewUser(@RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO userResponseDTO = userService.createNewUser(userRequestDTO);
-        return ResponseEntity.ok().body(userResponseDTO);
+    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> createNewUser(@RequestBody UserRequestDTO userRequestDTO) {
+        BaseResponseDTO<String, String, UserResponseDTO> response = userService.createNewUser(userRequestDTO);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<UserResponseDTO>> listAllUsers() {
-        List<UserResponseDTO> users = userService.listAllUsers();
-        return ResponseEntity.ok().body(users);
+    public ResponseEntity<BaseResponseDTO<String, String, List<UserResponseDTO>>> listAllUsers() {
+        BaseResponseDTO<String, String, List<UserResponseDTO>> response = userService.listAllUsers();
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<BaseResponseDTO<String, String, String>> deleteUser(@PathVariable Long userId) {
+        BaseResponseDTO<String, String, String> response = userService.deleteUser(userId);
+        return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long userId, @RequestBody UserRequestDTO requestDTO) {
+    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> updateUser(@PathVariable Long userId, @RequestBody UserRequestDTO requestDTO) {
         return ResponseEntity.ok().body(userService.updateUser(userId, requestDTO));
     }
 
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserResponseDTO> showUserDetail(@PathVariable Long userId) {
+    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> showUserDetail(@PathVariable Long userId) {
         return ResponseEntity.ok().body(userService.showUserDetail(userId));
     }
 }

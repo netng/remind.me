@@ -1,9 +1,10 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
+import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
-import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.EntityNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,31 +25,38 @@ public class UserService implements IUserService{
     ModelMapper modelMapper;
 
     @Override
-    public UserResponseDTO createNewUser(UserRequestDTO requestDTO) {
+    public BaseResponseDTO<String, String, UserResponseDTO> createNewUser(UserRequestDTO requestDTO) {
         User user = convertToEntity(requestDTO);
         User userCreated = userRepository.save(user);
-        return convertToDto(userCreated);
+        return new BaseResponseDTO<>("OK", "Succesfully created data", convertToDto(userCreated));
     }
 
     @Override
-    public List<UserResponseDTO> listAllUsers() {
+    public BaseResponseDTO<String, String, List<UserResponseDTO>> listAllUsers() {
         List<User> users = userRepository.findAll();
         if (!users.isEmpty()) {
-            return users.stream()
+            List<UserResponseDTO> usersDTO =  users.stream()
                     .map(user -> modelMapper.map(user, UserResponseDTO.class))
                     .collect(Collectors.toList());
+
+            BaseResponseDTO<String, String, List<UserResponseDTO>> responseDTO = new BaseResponseDTO<>(
+                    "OK", "Successfully retrieving data", usersDTO
+            );
+
+            return responseDTO;
         }
 
-        return Collections.emptyList();
+        return new BaseResponseDTO<>("OK", "Data is empty", Collections.emptyList());
 
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public BaseResponseDTO<String, String, String> deleteUser(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(userId));
+                .orElseThrow(() -> new EntityNotFoundException(userId));
 
         userRepository.deleteById(userId);
+        return new BaseResponseDTO<>("OK", "Sucessfully deleting data", null);
     }
 
     @Override
@@ -57,23 +65,23 @@ public class UserService implements IUserService{
      * Bean Utils Properties
      * Transactional
      */
-    public UserResponseDTO updateUser(Long userId, UserRequestDTO requestDTO) {
+    public BaseResponseDTO<String, String, UserResponseDTO> updateUser(Long userId, UserRequestDTO requestDTO) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(userId));
+                .orElseThrow(() -> new EntityNotFoundException(userId));
 
         User userUpdate = convertToEntity(requestDTO);
         userUpdate.setId(userId);
         User updatedUser = userRepository.save(userUpdate);
-        return convertToDto(updatedUser);
+        return new BaseResponseDTO<>("OK", "Successfully updating data", convertToDto(updatedUser));
 
     }
 
     @Override
-    public UserResponseDTO showUserDetail(Long userId) {
+    public BaseResponseDTO<String, String, UserResponseDTO> showUserDetail(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(userId));
+                .orElseThrow(() -> new EntityNotFoundException(userId));
         Optional<User> user = userRepository.findById(userId);
-        return convertToDto(user.get());
+        return new BaseResponseDTO<>("OK", "Success", convertToDto(user.get()));
     }
 
     private User convertToEntity(UserRequestDTO requestDTO) {

@@ -10,8 +10,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)

@@ -1,9 +1,10 @@
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
+import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
-import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
+import com.training.alterra.miniproject.remindmeapp.exceptions.EntityNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,15 +55,15 @@ public class UserServiceTest {
         when(userRepository.save(any(User.class)))
                 .thenReturn(user);
 
-        UserResponseDTO userCreated = userService.createNewUser(requestDTO);
+        BaseResponseDTO<String, String, UserResponseDTO> userCreated = userService.createNewUser(requestDTO);
 
-        assertThat(userCreated.getId())
+        assertThat(userCreated.getData().getId())
                 .isNotNull();
 
-        assertThat(userCreated.getFullName())
+        assertThat(userCreated.getData().getFullName())
                 .isSameAs(user.getFullName());
 
-        assertThat(userCreated.getEmail())
+        assertThat(userCreated.getData().getEmail())
                 .isSameAs(user.getEmail());
     }
 
@@ -78,9 +79,13 @@ public class UserServiceTest {
                 .map(user -> modelMapper.map(user, UserResponseDTO.class))
                 .collect(Collectors.toList());
 
-        List<UserResponseDTO> expected = userService.listAllUsers();
+        BaseResponseDTO<String, String, List<UserResponseDTO>> response = new BaseResponseDTO<>(
+                "OK", "Sucsessfully retrieving data", responseDto
+        );
 
-        assertEquals(expected, responseDto);
+        BaseResponseDTO<String, String, List<UserResponseDTO>> expected = userService.listAllUsers();
+
+        assertThat(expected.equals(response));
         verify(userRepository).findAll();
     }
 
@@ -95,8 +100,13 @@ public class UserServiceTest {
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
 
-        userService.deleteUser(user.getId());
-        verify(userRepository).deleteById(user.getId());
+
+        BaseResponseDTO<String, String, String> expected = new BaseResponseDTO<>(
+                "OK", "Successfully deleted data", ""
+        );
+        BaseResponseDTO<String, String, String> response = userService.deleteUser(user.getId());
+
+        assertThat(expected.equals(response));
     }
 
     @Test(expected = RuntimeException.class)
@@ -130,7 +140,7 @@ public class UserServiceTest {
 
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = EntityNotFoundException.class)
     public void shouldThrowException_whenUserNotFound_onUpdateUser() {
         User user = modelMapper.map(newUserDTO(), User.class);
         user.setId(1L);
@@ -154,13 +164,16 @@ public class UserServiceTest {
                 .willReturn(Optional.of(user));
 
         UserResponseDTO currentUser = modelMapper.map(user, UserResponseDTO.class);
+        BaseResponseDTO<String, String, UserResponseDTO> expected = new BaseResponseDTO<>(
+                "OK", "Success", currentUser
+        );
 
-        UserResponseDTO expected = userService.showUserDetail(user.getId());
+        BaseResponseDTO<String, String, UserResponseDTO> response = userService.showUserDetail(user.getId());
 
-        assertEquals(expected, currentUser);
+        assertThat(expected.equals(response));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = EntityNotFoundException.class)
     public void shouldThrowException_whenUserNotFound_onShowUserDetail() {
         User user = modelMapper.map(newUserDTO(), User.class);
         System.out.println(user);
