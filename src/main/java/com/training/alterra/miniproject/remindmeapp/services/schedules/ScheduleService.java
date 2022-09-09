@@ -1,6 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.services.schedules;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
@@ -13,6 +14,8 @@ import com.training.alterra.miniproject.remindmeapp.repositories.ScheduleReposit
 import org.modelmapper.ModelMapper;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -65,21 +68,35 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public BaseResponseDTO<String, String, List<ScheduleResponseDTO>> showAllSchedules(Long reminderId) {
+    public PaginatedBaseResponseDTO<String, String, List<ScheduleResponseDTO>> showAllSchedules(Long reminderId, Pageable pageable) {
         reminderRepository.findById(reminderId)
                 .orElseThrow(() -> new EntityNotFoundException(reminderId));
 
-        List<Schedule> schedules = scheduleRepository.findByReminderId(reminderId);
+        Page<Schedule> schedules = scheduleRepository.findByReminderId(reminderId, pageable);
 
         if (!schedules.isEmpty()) {
             List<ScheduleResponseDTO> response = schedules.stream()
                     .map(schedule -> convertToDto(schedule))
                     .collect(Collectors.toList());
 
-            return new BaseResponseDTO<>("OK", "Success", response);
+            return new PaginatedBaseResponseDTO<>(
+                    "OK",
+                    "Success",
+                    response,
+                    schedules.getTotalElements(),
+                    schedules.getTotalPages(),
+                    schedules.getNumber()
+            );
         }
 
-        return new BaseResponseDTO<>("OK", "Data is empty", Collections.emptyList());
+        return new PaginatedBaseResponseDTO<>(
+                "OK",
+                "Success",
+                Collections.emptyList(),
+                schedules.getTotalElements(),
+                schedules.getTotalPages(),
+                schedules.getNumber()
+        );
     }
 
     private Schedule convertToEntity(ScheduleRequestDTO requestDTO) {
