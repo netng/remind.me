@@ -1,3 +1,9 @@
+/**
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
 package com.training.alterra.miniproject.remindmeapp.services.users;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
@@ -31,7 +37,12 @@ public class UserService implements IUserService{
     public BaseResponseDTO<String, String, UserResponseDTO> createNewUser(UserRequestDTO requestDTO) {
         User user = convertToEntity(requestDTO);
         User userCreated = userRepository.save(user);
-        return new BaseResponseDTO<>("OK", "Succesfully created data", convertToDto(userCreated));
+
+        return new BaseResponseDTO<>(
+                "OK",
+                "Succesfully created data",
+                convertToDto(userCreated)
+        );
     }
 
     @Override
@@ -42,7 +53,8 @@ public class UserService implements IUserService{
                     .map(user -> modelMapper.map(user, UserResponseDTO.class))
                     .collect(Collectors.toList());
 
-            PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> responseDTO = new PaginatedBaseResponseDTO<>(
+            PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> responseDTO =
+                    new PaginatedBaseResponseDTO<>(
                     "OK",
                    "Successfully retrieving data",
                     usersDTO,
@@ -62,7 +74,6 @@ public class UserService implements IUserService{
                 users.getTotalPages(),
                 users.getNumber()
         );
-
     }
 
     @Override
@@ -71,7 +82,12 @@ public class UserService implements IUserService{
                 .orElseThrow(() -> new EntityNotFoundException(userId));
 
         userRepository.deleteById(userId);
-        return new BaseResponseDTO<>("OK", "Successfully deleting data", "ok");
+
+        return new BaseResponseDTO<>(
+                "OK",
+                "Successfully deleting data",
+                null
+        );
     }
 
     @Override
@@ -82,8 +98,12 @@ public class UserService implements IUserService{
         User userUpdate = convertToEntity(requestDTO);
         userUpdate.setId(userId);
         User updatedUser = userRepository.save(userUpdate);
-        return new BaseResponseDTO<>("OK", "Successfully updating data", convertToDto(updatedUser));
 
+        return new BaseResponseDTO<>(
+                "OK",
+                "Successfully updating data",
+                convertToDto(updatedUser)
+        );
     }
 
     @Override
@@ -91,7 +111,12 @@ public class UserService implements IUserService{
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(userId));
         Optional<User> user = userRepository.findById(userId);
-        return new BaseResponseDTO<>("OK", "Success", convertToDto(user.get()));
+
+        return new BaseResponseDTO<>(
+                "OK",
+                "Success",
+                convertToDto(user.get())
+        );
     }
 
     private User convertToEntity(UserRequestDTO requestDTO) {
@@ -101,5 +126,4 @@ public class UserService implements IUserService{
     private UserResponseDTO convertToDto(User user) {
         return modelMapper.map(user, UserResponseDTO.class);
     }
-
 }

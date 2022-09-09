@@ -1,3 +1,9 @@
+/**
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
 package com.training.alterra.miniproject.remindmeapp.services.schedules;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
@@ -39,7 +45,8 @@ public class ScheduleService implements IScheduleService {
     private Scheduler scheduler;
 
     @Override
-    public BaseResponseDTO<String, String, ScheduleResponseDTO> createNewSchedule(Long reminderId, ScheduleRequestDTO requestDTO) {
+    public BaseResponseDTO<String, String, ScheduleResponseDTO> createNewSchedule(
+            Long reminderId, ScheduleRequestDTO requestDTO) {
 
         ZoneId reminderDateTime = reminderRepository.findById(reminderId).get().getUser().getTimeZone();
         Reminder reminderOfSchedule = reminderRepository.findById(reminderId).get();
@@ -60,7 +67,11 @@ public class ScheduleService implements IScheduleService {
                         return scheduleRepository.save(convertToEntity(requestDTO));
                     });
 
-            return new BaseResponseDTO<>("OK", "Successfully creating data", convertToDto(schedule.get()));
+            return new BaseResponseDTO<>(
+                    "OK",
+                    "Successfully creating data",
+                    convertToDto(schedule.get())
+            );
 
         } catch (SchedulerException e) {
             throw new RuntimeException(e);
@@ -68,7 +79,8 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public PaginatedBaseResponseDTO<String, String, List<ScheduleResponseDTO>> showAllSchedules(Long reminderId, Pageable pageable) {
+    public PaginatedBaseResponseDTO<String, String, List<ScheduleResponseDTO>> showAllSchedules(
+            Long reminderId, Pageable pageable) {
         reminderRepository.findById(reminderId)
                 .orElseThrow(() -> new EntityNotFoundException(reminderId));
 

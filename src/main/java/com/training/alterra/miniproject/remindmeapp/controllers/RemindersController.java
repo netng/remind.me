@@ -1,3 +1,9 @@
+/**
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
 package com.training.alterra.miniproject.remindmeapp.controllers;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -24,34 +30,41 @@ public class RemindersController {
 
     @PostMapping("/users/{userId}/reminders")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> createNewReminder(@PathVariable Long userId, @RequestBody ReminderRequestDTO requestDTO) {
-        BaseResponseDTO<String, String, ReminderResponseDTO> responseDTO = reminderService.createNewReminder(userId, requestDTO);
+    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> createNewReminder(
+            @PathVariable Long userId, @RequestBody ReminderRequestDTO requestDTO) {
+        BaseResponseDTO<String, String, ReminderResponseDTO> responseDTO =
+                reminderService.createNewReminder(userId, requestDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/users/{userId}/reminders")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>>> listAllReminders(@PathVariable Long userId, Pageable pageable) {
-        PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> reminderResponseDTOS = reminderService.listAllReminders(userId, pageable);
+    public ResponseEntity<PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>>> listAllReminders(
+            @PathVariable Long userId, Pageable pageable) {
+        PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> reminderResponseDTOS =
+                reminderService.listAllReminders(userId, pageable);
         return ResponseEntity.ok().body(reminderResponseDTOS);
     }
 
     @DeleteMapping("/reminders/{reminderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> deleteReminder(@PathVariable Long reminderId) {
+    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> deleteReminder(
+            @PathVariable Long reminderId) {
         BaseResponseDTO<String, String, ReminderResponseDTO> response = reminderService.deleteReminder(reminderId);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/reminders/{reminderId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> updateReminder(@PathVariable Long reminderId, @RequestBody ReminderRequestDTO requestDTO) {
+    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> updateReminder(
+            @PathVariable Long reminderId, @RequestBody ReminderRequestDTO requestDTO) {
         return ResponseEntity.ok().body(reminderService.updateReminder(reminderId, requestDTO));
     }
 
     @GetMapping("/reminders/{reminderId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> showReminderDetail(@PathVariable Long reminderId) {
+    public ResponseEntity<BaseResponseDTO<String, String, ReminderResponseDTO>> showReminderDetail(
+            @PathVariable Long reminderId) {
         return ResponseEntity.ok().body(reminderService.showReminderDetail(reminderId));
     }
 }

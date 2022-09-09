@@ -1,3 +1,9 @@
+/**
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
 package com.training.alterra.miniproject.remindmeapp.services.reminders;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
@@ -10,13 +16,16 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IReminderService {
-    BaseResponseDTO<String, String, ReminderResponseDTO> createNewReminder(Long userId, ReminderRequestDTO requestDTO);
+    BaseResponseDTO<String, String, ReminderResponseDTO> createNewReminder(
+            Long userId, ReminderRequestDTO requestDTO);
 
-    PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> listAllReminders(Long userId, Pageable pageable);
+    PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> listAllReminders(
+            Long userId, Pageable pageable);
 
     BaseResponseDTO<String, String, ReminderResponseDTO> deleteReminder(Long reminderId);
 
-    BaseResponseDTO<String, String, ReminderResponseDTO> updateReminder(Long reminderId, ReminderRequestDTO requestDTO);
+    BaseResponseDTO<String, String, ReminderResponseDTO> updateReminder(
+            Long reminderId, ReminderRequestDTO requestDTO);
 
     BaseResponseDTO<String, String, ReminderResponseDTO> showReminderDetail(Long reminderId);
 }

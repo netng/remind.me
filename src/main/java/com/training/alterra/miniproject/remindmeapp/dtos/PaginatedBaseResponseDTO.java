@@ -1,5 +1,12 @@
 /**
- * @Resource https://javatodev.com/spring-boot-pagination-sorting-and-filtering/
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
+
+/**
+ * @Reference https://javatodev.com/spring-boot-pagination-sorting-and-filtering/
  */
 package com.training.alterra.miniproject.remindmeapp.dtos;
 
@@ -19,5 +26,4 @@ public class PaginatedBaseResponseDTO<S, M, O> implements Serializable {
     private Long numberOfItems;
     private int numberOfPages;
     private int currentPage;
-
 }

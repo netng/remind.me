@@ -1,3 +1,9 @@
+/**
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
 package com.training.alterra.miniproject.remindmeapp.controllers;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -24,14 +30,16 @@ public class UsersController {
 
     @PostMapping("/users/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> createNewUser(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> createNewUser(
+           @RequestBody UserRequestDTO userRequestDTO) {
         BaseResponseDTO<String, String, UserResponseDTO> response = userService.createNewUser(userRequestDTO);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>>> listAllUsers(Pageable pageable) {
+    public ResponseEntity<PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>>> listAllUsers(
+           Pageable pageable) {
         PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> response = userService.listAllUsers(pageable);
         return ResponseEntity.ok().body(response);
     }
@@ -45,7 +53,8 @@ public class UsersController {
 
     @PutMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> updateUser(@PathVariable Long userId, @RequestBody UserRequestDTO requestDTO) {
+    public ResponseEntity<BaseResponseDTO<String, String, UserResponseDTO>> updateUser(
+            @PathVariable Long userId, @RequestBody UserRequestDTO requestDTO) {
         return ResponseEntity.ok().body(userService.updateUser(userId, requestDTO));
     }
 
