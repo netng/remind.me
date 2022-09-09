@@ -1,11 +1,12 @@
 package com.training.alterra.miniproject.remindmeapp.services.schedules;
 
+import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
 import com.training.alterra.miniproject.remindmeapp.entities.Schedule;
+import com.training.alterra.miniproject.remindmeapp.exceptions.EntityNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.exceptions.InvalidReminderDateTimeException;
-import com.training.alterra.miniproject.remindmeapp.exceptions.ResourceNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.jobs.ReminderJob;
 import com.training.alterra.miniproject.remindmeapp.repositories.ReminderRepository;
 import com.training.alterra.miniproject.remindmeapp.repositories.ScheduleRepository;
@@ -35,7 +36,7 @@ public class ScheduleService implements IScheduleService {
     private Scheduler scheduler;
 
     @Override
-    public ScheduleResponseDTO createNewSchedule(Long reminderId, ScheduleRequestDTO requestDTO) {
+    public BaseResponseDTO<String, String, ScheduleResponseDTO> createNewSchedule(Long reminderId, ScheduleRequestDTO requestDTO) {
 
         ZoneId reminderDateTime = reminderRepository.findById(reminderId).get().getUser().getTimeZone();
         Reminder reminderOfSchedule = reminderRepository.findById(reminderId).get();
@@ -43,7 +44,7 @@ public class ScheduleService implements IScheduleService {
         try {
             ZonedDateTime dateTime = ZonedDateTime.of(requestDTO.getReminderDateTime(), reminderDateTime);
             if (dateTime.isBefore(ZonedDateTime.now())) {
-                throw new InvalidReminderDateTimeException(dateTime);
+                throw new InvalidReminderDateTimeException();
             }
 
             JobDetail jobDetail = buildJobDetail(reminderOfSchedule);
@@ -56,7 +57,7 @@ public class ScheduleService implements IScheduleService {
                         return scheduleRepository.save(convertToEntity(requestDTO));
                     });
 
-            return convertToDto(schedule.get());
+            return new BaseResponseDTO<>("OK", "Successfully creating data", convertToDto(schedule.get()));
 
         } catch (SchedulerException e) {
             throw new RuntimeException(e);
@@ -64,19 +65,21 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public List<ScheduleResponseDTO> showAllSchedules(Long reminderId) {
+    public BaseResponseDTO<String, String, List<ScheduleResponseDTO>> showAllSchedules(Long reminderId) {
         reminderRepository.findById(reminderId)
-                .orElseThrow(() -> new ResourceNotFoundException(reminderId));
+                .orElseThrow(() -> new EntityNotFoundException(reminderId));
 
         List<Schedule> schedules = scheduleRepository.findByReminderId(reminderId);
 
         if (!schedules.isEmpty()) {
-            return schedules.stream()
+            List<ScheduleResponseDTO> response = schedules.stream()
                     .map(schedule -> convertToDto(schedule))
                     .collect(Collectors.toList());
+
+            return new BaseResponseDTO<>("OK", "Success", response);
         }
 
-        return Collections.emptyList();
+        return new BaseResponseDTO<>("OK", "Data is empty", Collections.emptyList());
     }
 
     private Schedule convertToEntity(ScheduleRequestDTO requestDTO) {

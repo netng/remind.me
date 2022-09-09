@@ -1,5 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.controllers;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.schedules.ScheduleResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.services.schedules.IScheduleService;
@@ -19,15 +21,15 @@ public class SchedulesController {
 
     @PostMapping("/reminders/{reminderId}/schedules")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ScheduleResponseDTO> createNewSchedule(@PathVariable Long reminderId, @RequestBody ScheduleRequestDTO requestDTO) {
-        ScheduleResponseDTO schedule = scheduleService.createNewSchedule(reminderId, requestDTO);
+    public ResponseEntity<BaseResponseDTO<String, String, ScheduleResponseDTO>> createNewSchedule(@PathVariable Long reminderId, @RequestBody ScheduleRequestDTO requestDTO) {
+        BaseResponseDTO<String, String, ScheduleResponseDTO> schedule = scheduleService.createNewSchedule(reminderId, requestDTO);
         return ResponseEntity.ok().body(schedule);
     }
 
     @GetMapping("/reminders/{reminderId}/schedules")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ScheduleResponseDTO>> listAllSchedules(@PathVariable Long reminderId) {
-        List<ScheduleResponseDTO> schedules = scheduleService.showAllSchedules(reminderId);
+    public ResponseEntity<BaseResponseDTO<String, String, List<ScheduleResponseDTO>>> listAllSchedules(@PathVariable Long reminderId) {
+        BaseResponseDTO<String, String, List<ScheduleResponseDTO>> schedules = scheduleService.showAllSchedules(reminderId);
         return ResponseEntity.ok().body(schedules);
 
     }

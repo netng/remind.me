@@ -56,7 +56,7 @@ public class UserService implements IUserService{
                 .orElseThrow(() -> new EntityNotFoundException(userId));
 
         userRepository.deleteById(userId);
-        return new BaseResponseDTO<>("OK", "Sucessfully deleting data", null);
+        return new BaseResponseDTO<>("OK", "Successfully deleting data", "ok");
     }
 
     @Override
