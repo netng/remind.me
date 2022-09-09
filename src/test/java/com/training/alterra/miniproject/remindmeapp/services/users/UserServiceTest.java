@@ -75,18 +75,18 @@ public class UserServiceTest {
         List<User> users = new ArrayList<>();
         users.add(new User());
 
-        given(userRepository.findAll(Pageable.cl))
+        given(userRepository.findAll())
                 .willReturn(users);
 
-        Page<PaginatedBaseResponseDTO> responseDto = users.stream()
-                .map(user -> modelMapper.map(user, PaginatedBaseResponseDTO.class))
+        List<UserResponseDTO> responseDto = users.stream()
+                .map(user -> modelMapper.map(user, UserResponseDTO.class))
                 .collect(Collectors.toList());
 
         BaseResponseDTO<String, String, List<UserResponseDTO>> response = new BaseResponseDTO<>(
                 "OK", "Sucsessfully retrieving data", responseDto
         );
 
-        PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> expected = userService.listAllUsers(users);
+        PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> expected = userService.listAllUsers((Pageable) users);
 
         assertThat(expected.equals(response));
         verify(userRepository).findAll();

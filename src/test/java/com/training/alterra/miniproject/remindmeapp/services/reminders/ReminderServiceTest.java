@@ -2,6 +2,7 @@ package com.training.alterra.miniproject.remindmeapp.services.reminders;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.training.alterra.miniproject.remindmeapp.dtos.BaseResponseDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.PaginatedBaseResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderRequestDTO;
 import com.training.alterra.miniproject.remindmeapp.dtos.reminders.ReminderResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
@@ -17,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +77,7 @@ public class ReminderServiceTest {
 
     @Test
     public void listAllReminders_shouldReturnListOfReminders() {
+        Pageable pageable = null;
         Reminder reminder = modelMapper.map(setReminderDTO(), Reminder.class);
         reminder.setId(1L);
         reminder.setUser(setUser());
@@ -84,8 +88,12 @@ public class ReminderServiceTest {
         given(userRepository.findById(setUser().getId()))
                 .willReturn(Optional.of(setUser()));
 
-        BaseResponseDTO<String, String, List<ReminderResponseDTO>> responseDTO = reminderService.listAllReminders(setUser().getId());
-        assertNotNull(responseDTO);
+        Page<Reminder> expected = reminderRepository.findByUserId(setUser().getId(), pageable);
+
+        PaginatedBaseResponseDTO<String, String, List<ReminderResponseDTO>> actual = reminderService.listAllReminders(setUser().getId(), pageable);
+        assertThat(expected).usingRecursiveComparison().isEqualTo(actual);
+        System.out.println(expected);
+        System.out.println(actual);
     }
 
     @Test
