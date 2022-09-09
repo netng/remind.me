@@ -1,3 +1,6 @@
+/**
+ * @Resource https://javatodev.com/spring-boot-pagination-sorting-and-filtering/
+ */
 package com.training.alterra.miniproject.remindmeapp.dtos;
 
 import lombok.AllArgsConstructor;
