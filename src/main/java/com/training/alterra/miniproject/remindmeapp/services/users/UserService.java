@@ -60,11 +60,6 @@ public class UserService implements IUserService{
     }
 
     @Override
-    /**
-     * NOTE:
-     * Bean Utils Properties
-     * Transactional
-     */
     public BaseResponseDTO<String, String, UserResponseDTO> updateUser(Long userId, UserRequestDTO requestDTO) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(userId));
