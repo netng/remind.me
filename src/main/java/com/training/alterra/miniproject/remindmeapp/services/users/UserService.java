@@ -55,12 +55,12 @@ public class UserService implements IUserService{
 
             PaginatedBaseResponseDTO<String, String, List<UserResponseDTO>> responseDTO =
                     new PaginatedBaseResponseDTO<>(
-                    "OK",
+                   "OK",
                    "Successfully retrieving data",
                     usersDTO,
                     users.getTotalElements(),
                     users.getTotalPages(),
-                    users.getNumber() + 1
+                   users.getNumber() + 1
             );
 
             return responseDTO;
@@ -72,7 +72,7 @@ public class UserService implements IUserService{
                 Collections.emptyList(),
                 users.getTotalElements(),
                 users.getTotalPages(),
-                users.getNumber() + 1
+               users.getNumber() + 1
         );
     }
 
