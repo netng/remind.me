@@ -70,7 +70,7 @@ public class ReminderService implements IReminderService {
                     responseDTO,
                     reminders.getTotalElements(),
                     reminders.getTotalPages(),
-                    reminders.getNumber()
+                    reminders.getNumber() + 1
             );
         }
 
@@ -80,7 +80,7 @@ public class ReminderService implements IReminderService {
                 Collections.emptyList(),
                 reminders.getTotalElements(),
                 reminders.getTotalPages(),
-                reminders.getNumber()
+                reminders.getNumber() + 1
         );
     }
 

@@ -97,7 +97,7 @@ public class ScheduleService implements IScheduleService {
                     response,
                     schedules.getTotalElements(),
                     schedules.getTotalPages(),
-                    schedules.getNumber()
+                    schedules.getNumber() + 1
             );
         }
 
@@ -107,7 +107,7 @@ public class ScheduleService implements IScheduleService {
                 Collections.emptyList(),
                 schedules.getTotalElements(),
                 schedules.getTotalPages(),
-                schedules.getNumber()
+                schedules.getNumber() + 1
         );
     }
 

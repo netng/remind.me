@@ -60,7 +60,7 @@ public class UserService implements IUserService{
                     usersDTO,
                     users.getTotalElements(),
                     users.getTotalPages(),
-                    users.getNumber()
+                    users.getNumber() + 1
             );
 
             return responseDTO;
@@ -72,7 +72,7 @@ public class UserService implements IUserService{
                 Collections.emptyList(),
                 users.getTotalElements(),
                 users.getTotalPages(),
-                users.getNumber()
+                users.getNumber() + 1
         );
     }
 
