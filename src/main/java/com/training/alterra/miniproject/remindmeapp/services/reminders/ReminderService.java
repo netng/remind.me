@@ -14,12 +14,15 @@ import com.training.alterra.miniproject.remindmeapp.entities.Reminder;
 import com.training.alterra.miniproject.remindmeapp.exceptions.EntityNotFoundException;
 import com.training.alterra.miniproject.remindmeapp.repositories.ReminderRepository;
 import com.training.alterra.miniproject.remindmeapp.repositories.UserRepository;
+import com.training.alterra.miniproject.remindmeapp.utils.ReminderExcelExporterUtil;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -128,6 +131,17 @@ public class ReminderService implements IReminderService {
                 "Success",
                 convertToDto(reminder.get())
         );
+    }
+
+    @Override
+    public Page<Reminder> exportToExcel(Long userId, Pageable pageable) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(userId));
+
+        Page<Reminder> reminders = reminderRepository.findByUserId(userId, pageable);
+        System.out.println(reminders);
+        return reminders;
+
     }
 
     private Reminder convertToEntity(ReminderRequestDTO requestDTO) {
