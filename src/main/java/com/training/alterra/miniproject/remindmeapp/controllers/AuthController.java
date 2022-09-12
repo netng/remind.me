@@ -1,6 +1,7 @@
 package com.training.alterra.miniproject.remindmeapp.controllers;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
+import com.training.alterra.miniproject.remindmeapp.dtos.users.UserResponseDTO;
 import com.training.alterra.miniproject.remindmeapp.entities.Role;
 import com.training.alterra.miniproject.remindmeapp.entities.RoleName;
 import com.training.alterra.miniproject.remindmeapp.entities.User;
@@ -63,18 +64,18 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new ApiResponse("OK", new JwtAuthenticationResponse(jwt)));
+        return ResponseEntity.ok(new ApiResponse("OK", "success", new JwtAuthenticationResponse(jwt)));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity(new ApiResponse("BAD_REQUEST", new DataResponse("Username alredy taken!")),
+            return new ResponseEntity(new ApiResponse("BAD_REQUEST", "Username already taken!", Collections.emptyList()),
                     HttpStatus.BAD_REQUEST);
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse("BAD_REQUEST", new DataResponse("Email already in use")),
+            return new ResponseEntity(new ApiResponse("BAD_REQUEST", "error", new DataResponse("Email already in use")),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -89,11 +90,12 @@ public class AuthController {
         user.setRoles(Collections.singleton(userRole));
 
         User result = userRepository.save(modelMapper.map(user, User.class));
+        UserResponseDTO response = modelMapper.map(result, UserResponseDTO.class);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/users/{username}")
                 .buildAndExpand(result.getUsername()).toUri();
 
-        return ResponseEntity.created(location).body(new ApiResponse("OK", new DataResponse("User registered successfully")));
+        return ResponseEntity.created(location).body(new ApiResponse("OK", "user registered successfully", response));
     }
 }

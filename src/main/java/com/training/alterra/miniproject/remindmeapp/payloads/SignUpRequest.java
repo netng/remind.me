@@ -1,5 +1,6 @@
 package com.training.alterra.miniproject.remindmeapp.payloads;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,23 +13,21 @@ import java.time.ZoneId;
 @Setter
 public class SignUpRequest {
     @NotBlank
-    @Size(min = 4, max = 40)
+    @JsonProperty("full_name")
     private String fullName;
 
     @NotBlank
-    @Size(min = 3, max = 15)
     private String username;
 
     @NotBlank
-    @Size(max = 40)
     @Email
     private String email;
 
     @NotBlank
-    @Size(min = 6, max = 20)
     private String password;
 
     @NotBlank
+    @JsonProperty("time_zone")
     private ZoneId timeZone;
 
 
