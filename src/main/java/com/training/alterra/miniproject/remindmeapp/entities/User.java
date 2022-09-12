@@ -14,9 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity(name = "User")
 @Table(name = "users")
@@ -31,6 +29,8 @@ public class User {
 
     @Column(name = "full_name")
     private String fullName;
+
+    private String username;
 
     private String email;
 
@@ -54,4 +54,11 @@ public class User {
             orphanRemoval = true
     )
     private List<Reminder> reminders = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 }

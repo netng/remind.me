@@ -27,6 +27,8 @@ public class UserResponseDTO implements Serializable {
     @JsonProperty("full_name")
     private String fullName;
 
+    private String username;
+
     private String email;
 
     @JsonProperty("time_zone")
