@@ -1,3 +1,9 @@
+/**
+ * @Author Nandang Sopyan
+ * @ApplicationName remind.me app
+ * @CreatedAt Sept 2022
+ * @Description This is a REST API application as mini project task at alterra training academy program
+ */
 package com.training.alterra.miniproject.remindmeapp.controllers;
 
 import com.training.alterra.miniproject.remindmeapp.dtos.users.UserRequestDTO;
@@ -64,23 +70,40 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new ApiResponse("OK", "success", new JwtAuthenticationResponse(jwt)));
+
+        return ResponseEntity.ok(new ApiResponse(
+                "OK",
+                "success",
+                new JwtAuthenticationResponse(jwt))
+        );
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity(new ApiResponse("BAD_REQUEST", "Username already taken!", Collections.emptyList()),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ApiResponse(
+                    "BAD_REQUEST",
+                    "Username already taken!",
+                    Collections.emptyList()),
+                    HttpStatus.BAD_REQUEST
+            );
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse("BAD_REQUEST", "Email already in use", Collections.emptyList()),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ApiResponse(
+                    "BAD_REQUEST",
+                    "Email already in use",
+                    Collections.emptyList()),
+                    HttpStatus.BAD_REQUEST
+            );
         }
 
-        UserRequestDTO user = new UserRequestDTO(signUpRequest.getFullName(), signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword(), signUpRequest.getTimeZone());
+        UserRequestDTO user = new UserRequestDTO(signUpRequest.getFullName(),
+                signUpRequest.getUsername(),
+                signUpRequest.getEmail(),
+                signUpRequest.getPassword(),
+                signUpRequest.getTimeZone()
+        );
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -96,6 +119,10 @@ public class AuthController {
                 .fromCurrentContextPath().path("/api/v1/users/{username}")
                 .buildAndExpand(result.getUsername()).toUri();
 
-        return ResponseEntity.created(location).body(new ApiResponse("OK", "user registered successfully", response));
+        return ResponseEntity.created(location).body(new ApiResponse(
+                "OK",
+                "user registered successfully",
+                response)
+        );
     }
 }
